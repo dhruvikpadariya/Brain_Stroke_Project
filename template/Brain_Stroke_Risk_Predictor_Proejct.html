@@ -1,0 +1,355 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Symptoms Form</title>
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            
+            let features = [];
+            document.querySelectorAll('input[type=radio]:checked').forEach(input => {
+                features.push(parseInt(input.value));
+            });
+            
+            features.push(parseInt(document.getElementById('Age').value));
+            features.push(parseFloat(document.getElementById('Stroke_Risk').value));
+            
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ features: features })
+            })
+            .then(response => response.json())
+            .then(data => alert('Prediction: ' + JSON.stringify(data.features == 0 ? 'No':'yes')))  
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+    <form onsubmit="submitForm(event)">
+        <fieldset>
+            <legend>Health Symptoms</legend>
+            
+            <label>Chest Pain:</label>
+            <input type="radio" name="Chest_Pain" value="0" required> No
+            <input type="radio" name="Chest_Pain" value="1"> Yes
+            <br>
+            
+            <label>Shortness Of Breath:</label>
+            <input type="radio" name="Shortness_Of_Breath" value="0" required> No
+            <input type="radio" name="Shortness_Of_Breath" value="1"> Yes
+            <br>
+            
+            <label>Irregular HeartBeat:</label>
+            <input type="radio" name="Irregular_HeartBeat" value="0" required> No
+            <input type="radio" name="Irregular_HeartBeat" value="1"> Yes
+            <br>
+            
+            <label>Fatigue & Weakness:</label>
+            <input type="radio" name="Fatigue_Weakness" value="0" required> No
+            <input type="radio" name="Fatigue_Weakness" value="1"> Yes
+            <br>
+            
+            <label>Dizziness:</label>
+            <input type="radio" name="Dizziness" value="0" required> No
+            <input type="radio" name="Dizziness" value="1"> Yes
+            <br>
+            
+            <label>Swelling Edema:</label>
+            <input type="radio" name="Swelling_Edema" value="0" required> No
+            <input type="radio" name="Swelling_Edema" value="1"> Yes
+            <br>
+            
+            <label>Pain in Neck/Jaw/Shoulder/Back:</label>
+            <input type="radio" name="Pain_in_Neck_Jaw_Shoulder_Back" value="0" required> No
+            <input type="radio" name="Pain_in_Neck_Jaw_Shoulder_Back" value="1"> Yes
+            <br>
+            
+            <label>Excessive Sweating:</label>
+            <input type="radio" name="Excessive_Sweating" value="0" required> No
+            <input type="radio" name="Excessive_Sweating" value="1"> Yes
+            <br>
+            
+            <label>Persistent Cough:</label>
+            <input type="radio" name="Persistent_Cough" value="0" required> No
+            <input type="radio" name="Persistent_Cough" value="1"> Yes
+            <br>
+            
+            <label>Nausea/Vomiting:</label>
+            <input type="radio" name="Nausea_Vomiting" value="0" required> No
+            <input type="radio" name="Nausea_Vomiting" value="1"> Yes
+            <br>
+            
+            <label>High Blood Pressure:</label>
+            <input type="radio" name="High_Blood_Pressure" value="0" required> No
+            <input type="radio" name="High_Blood_Pressure" value="1"> Yes
+            <br>
+            
+            <label>Chest Discomfort:</label>
+            <input type="radio" name="Chest_Discomfort" value="0" required> No
+            <input type="radio" name="Chest_Discomfort" value="1"> Yes
+            <br>
+            
+            <label>Cold Hands/Feet:</label>
+            <input type="radio" name="Cold_Hands_Feet" value="0" required> No
+            <input type="radio" name="Cold_Hands_Feet" value="1"> Yes
+            <br>
+            
+            <label>Snoring/Sleep Apnea:</label>
+            <input type="radio" name="Snoring_Sleep_Apnea" value="0" required> No
+            <input type="radio" name="Snoring_Sleep_Apnea" value="1"> Yes
+            <br>
+            
+            <label>Anxiety/Feeling of Doom:</label>
+            <input type="radio" name="Anxiety_Feeling_of_Doom" value="0" required> No
+            <input type="radio" name="Anxiety_Feeling_of_Doom" value="1"> Yes
+            <br>
+            
+            <label for="Age">Age:</label>
+            <input type="number" id="Age" name="Age" required>
+            <br>
+            
+            <label for="Stroke_Risk">Stroke Risk:</label>
+            <input type="number" id="Stroke_Risk" name="Stroke_Risk" step="0.01" required>
+            <br>
+            
+            <button type="submit">Submit</button>
+        </fieldset>
+    </form>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Symptoms Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            
+            let features = [];
+            document.querySelectorAll('input[type=radio]:checked').forEach(input => {
+                features.push(parseInt(input.value));
+            });
+            
+            features.push(parseInt(document.getElementById('Age').value));
+            features.push(parseFloat(document.getElementById('Stroke_Risk').value));
+            
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ features: features })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultText = data.prediction == 0 ? 'No' : 'Yes';
+                document.getElementById('resultText').innerText = 'Prediction: ' + resultText;
+                let resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+                resultModal.show();
+            })  
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card p-4 shadow">
+            <h2 class="text-center">Health Symptoms Form</h2>
+            <form onsubmit="submitForm(event)">
+                <fieldset>
+                    <legend class="mb-3">Health Symptoms</legend>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Chest Pain:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Chest_Pain" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Chest_Pain" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Shortness Of Breath:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Shortness_Of_Breath" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Shortness_Of_Breath" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Irregular HeartBeat:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Irregular_HeartBeat" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Irregular_HeartBeat" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Fatigue & Weakness:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Fatigue_Weakness" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Fatigue_Weakness" value="1"> Yes
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Dizziness :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Dizziness" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Dizziness" value="1"> Yes
+                        </div>
+                    </div>
+
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Swelling :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Swelling" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Swelling" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Pain in Neck/Jaw/Shoulder/Back :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Pain in Neck/Jaw/Shoulder/Back" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Pain in Neck/Jaw/Shoulder/Back" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Excessive Sweating :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Excessive" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Excessive" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Persistent Cough :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Persistent Cough" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Persistent Cough" value="1"> Yes
+                        </div>
+                    </div>
+
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nausea/Vomiting :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Nausea/Vomiting" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Nausea/Vomiting" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">High Blood Pressure :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="High Blood Pressure" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="High Blood Pressure" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Chest Discomfort (Activity) :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Chest Discomfort" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Chest Discomfort" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Cold Hands/Feet:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Cold Hands/Feet" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Cold Hands/Feet" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Snoring/Sleep Apnea :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Snoring/Sleep Apnea" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Snoring/Sleep Apnea" value="1"> Yes
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Anxiety/Feeling of Doom :</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Anxiety/Feeling of Doom" value="0" required> No
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Anxiety/Feeling of Doom" value="1"> Yes
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Age:</label>
+                        <input type="number" id="Age" name="Age" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Stroke Risk:</label>
+                        <input type="number" id="Stroke_Risk" name="Stroke_Risk" step="0.01" class="form-control" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Result -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Prediction Result</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="resultText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

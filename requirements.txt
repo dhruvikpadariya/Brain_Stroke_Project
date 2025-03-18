@@ -1,0 +1,7 @@
+flask
+nbconvert
+pandas
+numpy
+joblib
+flask_cors
+scikit-learn
